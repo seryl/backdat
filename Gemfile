@@ -14,8 +14,6 @@ gem "mixlib-cli", ">= 1.2.2"
 gem "mixlib-config", ">= 1.1.0"
 gem "mixlib-log", ">= 1.3.0"
 
-gem "faraday", "~> 0.8.2"
-
 gem "puma", "~> 1.5.0"
 gem "rack", "~> 1.4.1"
 gem "sinatra", "~> 1.3.2"

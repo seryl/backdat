@@ -1,4 +1,5 @@
 require 'backdat/application'
+require 'backdat/client'
 require 'backdat/server'
 
 # The backdat server command line parser.
@@ -98,7 +99,11 @@ class Backdat::Application::Server < Backdat::Application
   def setup_application
     Backdat::Daemon.change_privilege
     Backdat::Config[:server] = true if Backdat::Config[:daemonize]
-    @app = Backdat::Server.new
+    if Backdat::Config[:server]
+      @app = Backdat::Server.new
+    else
+      @app = Backdat::Client.new
+    end
   end
 
   # Runs the backdat server.
