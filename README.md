@@ -1,8 +1,21 @@
-= backdat
+# backdat
 
-Description goes here.
+A better backup library and service.
 
-== Contributing to backdat
+## Library
+
+The library consists of a number of backends very similar to the backup gem.
+
+## Service
+
+backdat manages backups for the current node and it's transports to the
+various storage backends.
+
+## Orchestrator
+
+Currently not implemented. Intended to acts as a proxy for multiple servers.
+
+## Contributing to backdat
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
@@ -12,7 +25,7 @@ Description goes here.
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2012 Josh Toft. See LICENSE.txt for
 further details.

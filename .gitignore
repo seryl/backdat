@@ -2,9 +2,6 @@
 coverage
 coverage.data
 
-# rdoc generated
-rdoc
-
 # yard generated
 doc
 .yardoc
@@ -47,3 +44,9 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+# For rvm:
+.rvmrc
+
+# Ignore Gemfile.lock
+Gemfile.lock
