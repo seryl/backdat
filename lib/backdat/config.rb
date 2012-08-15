@@ -64,7 +64,7 @@ class Backdat::Config
   end
 
   # Configuration Settings
-  config_file "/etc/backdat/backdat.rb"
+  config_file "/etc/backdat.rb"
 
   # Logging Settings
   log_level :info
