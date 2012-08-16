@@ -66,11 +66,19 @@ class Backdat::Application::Server < Backdat::Application
     :description => "Set the PID file location, defaults to /tmp/backdat.pid",
     :proc => nil
 
+  option :json,
+    :short => "-j JSON",
+    :long  => "--json JSON",
+    :description => "Override the default .backdat json config",
+    :default => "",
+    :proc => nil
+
   option :server,
     :short => "-s",
     :long  => "--server",
     :default => false,
     :description => "Start the application as a server",
+    :boolean => true,
     :proc => nil
 
   option :help,
@@ -93,6 +101,7 @@ class Backdat::Application::Server < Backdat::Application
   # Grabs all of the cli parameters and generates the mixlib config object.
   def initialize
     super
+    Backdat::Config.merge!(config)
   end
 
   # Configures the backdat server based on the cli parameters.
@@ -102,7 +111,7 @@ class Backdat::Application::Server < Backdat::Application
     if Backdat::Config[:server]
       @app = Backdat::Server.new
     else
-      @app = Backdat::Client.new
+      @app = Backdat::Client.new(@commands)
     end
   end
 

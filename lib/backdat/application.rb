@@ -4,11 +4,15 @@ require 'mixlib/cli'
 class Backdat::Application
   include Mixlib::CLI
 
+  # The commands that were left unparsed from parse_options.
+  attr_accessor :commands
+
   # Added a Wakeup exception.
   class Wakeup < Exception; end
 
   # Initialize the application, setting up default handlers.
   def initialize
+    @commands = []
     super
 
     trap("TERM") do
@@ -37,7 +41,7 @@ class Backdat::Application
 
   # Configure the application throwing a warning when there is no config file.
   def configure_backdat
-    parse_options
+    @commands = parse_options
 
     begin
       ::File.open(config[:config_file]) { |f| apply_config(f.path) }
