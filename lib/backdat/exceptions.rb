@@ -5,4 +5,7 @@ module Backdat::Exceptions
 
   # Erroenous HTTP response from a request.
   class HTTPError < RuntimeError; end
+
+  # .backdat json configuration file is invalid.
+  class InvalidDotfile < RuntimeError; end
 end

@@ -5,6 +5,18 @@ require 'backdat/server'
 # The backdat server command line parser.
 class Backdat::Application::Server < Backdat::Application
 
+  banner """Usage: #{$0} (options)
+
+    #{$0} SOURCE
+    #{$0} SOURCE TARGET
+    #{$0} [ backup|restore ] SOURCE
+    #{$0} [ backup|restore ] SOURCE TARGET
+
+    Note: Configuration for directories is checked in the following order:
+          1) redis if the backdat server is running
+          2) directory specific .backdat file
+  """
+
   option :config_file,
     :short => "-c CONFIG",
     :long  => "--config CONFIG",
@@ -106,12 +118,13 @@ class Backdat::Application::Server < Backdat::Application
 
   # Configures the backdat server based on the cli parameters.
   def setup_application
+    original_dir = Dir.pwd
     Backdat::Daemon.change_privilege
     Backdat::Config[:server] = true if Backdat::Config[:daemonize]
     if Backdat::Config[:server]
       @app = Backdat::Server.new
     else
-      @app = Backdat::Client.new(@commands)
+      @app = Backdat::Client.new(@commands, original_dir)
     end
   end
 
