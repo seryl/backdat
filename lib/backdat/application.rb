@@ -61,7 +61,7 @@ class Backdat::Application
     Backdat::Log.init(Backdat::Config[:log_location])
     if ( Backdat::Config[:log_location] != STDOUT ) && STDOUT.tty? &&
       ( !Backdat::Config[:daemonize] )
-      stdout_loger = Logger.new(STDOUT)
+      stdout_logger = Logger.new(STDOUT)
       STDOUT.sync = true
       stdout_logger = Backdat::Log.logger.formatter
       Backdat::Log.loggers << stdout_logger
