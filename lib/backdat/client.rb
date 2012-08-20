@@ -33,7 +33,7 @@ class Backdat::Client
       Backdat::Config[:json] = File.absolute_path("#{@first}/.backdat")
     end
     job_config = parse_dotfile
-    create_new_job
+    run_job
   end
 
   def parse_dotfile
@@ -46,9 +46,10 @@ class Backdat::Client
   end
 
   def create_backdat_file
+    puts "Creating backdat file"
   end
 
-  def create_new_job
+  def run_job
   end
 
   # Prints an alias warning and exits if the command intent isn't clear.
