@@ -12,35 +12,8 @@ module Backdat::Storage
   # The base backdat storage plugin class.
   class Base < Backdat::Link
     
-    # Creates a new storage object.
-    def initialize
-    end
-
-    # The name of the storage class.
-    # 
-    # @return [ String ] The name of the storage class.
-    def name
-      self.class.name.split('::').last
-    end
-
-    # Backup data from the chain.
-    # 
-    # @param [ Backdat::Chain ] chain The chain to backup from.
-    # 
-    # @return [ true,false ] Whether or not the operation succeeded.
-    def backup(chain=nil)
-      true
-    end
-
-    # Restores data from the chain.
-    # 
-    # @param [ Backdat::Chain ] chain The chain to restore onto.
-    # 
-    # @return [ true,false ] Whether or not the operation succeeded.
-    def restore(chain=nil)
-      true
-    end
-
+    # The path to the storage object.
+    attr_accessor :path
   end
 end
 

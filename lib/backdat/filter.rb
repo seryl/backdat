@@ -11,26 +11,6 @@ module Backdat::Filter
 
   # The base backdat filter plugin class.
   class Base < Backdat::Link
-    
-    # Creates a new filter object.
-    def initialize(chain=nil)
-      @chain = chain
-    end
-
-    # The name of the filter class.
-    # 
-    # @return [ String ] The name of the filter class.
-    def name
-      self.class.name.split('::').last
-    end
-
-    # Filters a 
-    # 
-    # @param [ Backdat::Link ] target The restore target.
-    def restore(target=nil, source=nil)
-      true
-    end
-
   end
 end
 
