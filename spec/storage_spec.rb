@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Backdat::Storage" do
   it "should be able to list the currently available plugins" do
-    plugins = ["Base", "File", "S3"]
+    plugins = ["Base", "Local", "Rsync", "S3"]
     Backdat::Storage.plugins.should eql(plugins)
   end
 end
