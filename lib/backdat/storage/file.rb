@@ -33,7 +33,7 @@ class Backdat::Storage::File < Backdat::Storage::Base
   # 
   # @note Takes any string or splat to match.
   # 
-  # @param [ Array ] The list of string to match against.
+  # @param [ Array ] items The list of string to match against.
   def exclude_item(items)
     exclude = @excluded.to_set
     Array(items).each { |i| exclude << i }

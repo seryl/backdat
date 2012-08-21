@@ -11,7 +11,7 @@ class Backdat::Client
   # Initializes the backdat client.
   # 
   # @param [ Array ] commands The unparsed mixlib-cli parameters.
-  # @param [ String ] The path to the calling directory.
+  # @param [ String ] original_dir The path to the calling directory.
   def initialize(commands=[], original_dir)
     @commands = commands
     @original_dir = original_dir
@@ -28,6 +28,7 @@ class Backdat::Client
     generate_job
   end
 
+  # Creates a new job from the parameters.
   def generate_job
     if Backdat::Config[:json].empty?
       Backdat::Config[:json] = File.absolute_path("#{@first}/.backdat")
@@ -36,6 +37,7 @@ class Backdat::Client
     run_job
   end
 
+  # Parses the backdat dotfile and creates it if it's missing.
   def parse_dotfile
     if File.exists? Backdat::Config[:json]
       raise Backdat::Exceptions::InvalidDotfile,
@@ -45,10 +47,12 @@ class Backdat::Client
     end
   end
 
+  # Creates a new backdat dotfile based on the parameters given.
   def create_backdat_file
     puts "Creating backdat file"
   end
 
+  # Runs the job for the given parameters.
   def run_job
   end
 
@@ -66,7 +70,7 @@ class Backdat::Client
   # 
   # @param [ String ] cmd The command to lookup the alias for.
   # 
-  # @reutn [ Symbol ] The symbol to send 
+  # @return [ Symbol ] The symbol to send to see whether there is an alias.
   def aliases(cmd)
     COMMAND_ALIASES.each { |k,v| return k if v.include?(cmd) }
     nil
