@@ -35,7 +35,7 @@ class Backdat::Daemon
 
     # Checks if Backdat is running based on the pid_file.
     # 
-    # @return [ true,false ] Whether or not Backdat is running.
+    # @return [ Boolean ] Whether or not Backdat is running.
     def running?
       if pid_from_file.nil?
         false
