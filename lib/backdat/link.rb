@@ -1,6 +1,7 @@
 # A target, source, or intermediary in a backup or restore chain.
 class Backdat::Link
-  attr_reader :params, :before, :next, :chain, :format
+  attr_reader :params, :format
+  attr_accessor :before, :next, :chain
 
   # @param [ Hash ] params The parameters to initialize the link with.
   # 
