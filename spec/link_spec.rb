@@ -13,6 +13,19 @@ describe "Backdat::Link" do
     @link.name.should eql("Link")
   end
 
+  it "should be able to check whether it is a source" do
+    @link.is_source?.should eql(true)
+    @link.is_target?.should eql(false)
+  end
+
+  it "should be able to check whether it is a target" do
+    source = Backdat::Link.new
+    source.next = @link
+    @link.before = source
+    source.is_source?.should eql(true)
+    @link.is_target?.should eql(true)
+  end
+
   it "should support fall-thru parameter checking at initialization" do
     @link = Backdat::Link.new(:bleh => "awesome")
     @link.link_config(:bleh).should eql("awesome")
@@ -25,8 +38,8 @@ describe "Backdat::Link" do
     Backdat::Config.configuration.delete(:link_blehk)
   end
 
-  it "should default to the `:files` format" do
-    @link.format.should eql(:files)
+  it "should default to the `:file` format" do
+    @link.format.should eql(:file)
   end
 
   it "should have nil as a default next" do
