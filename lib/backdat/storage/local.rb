@@ -20,15 +20,35 @@ class Backdat::Storage::Local < Backdat::Storage::Base
     @method = link_config(:method) || :cp
   end
 
+  # Yields a Backdat::Data enumerator for the next link to consume/backup.
+  #
+  # @note The iterator typing is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def backup
+  end
+
+  # Yields a Backdat::Data enumerator for the next link to consume/restore.
+  #
+  # @note The iterator typing is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def restore
+  end
+
   # Returns the list of files at the given path.
   # 
   # @return [ Array ] The list of files at the given path.
   def file_list
-    Dir.entries(@path).select do |f|
-      @excluded.each do |_exclude|
-        break false if f.match(/^#{_exclude}$/)
+    Array(@path).inject(Set.new) do |list, _path|
+      next list unless File.exists?(_path)
+      if File.directory?(_path)
+        list = list | sanitized_directory(_path)
+      else
+        list << _path if keep_file?(_path)
       end
-    end
+      list
+    end.to_a
   end
 
   # Add an item or list of items to the excluded list.
@@ -38,7 +58,7 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # @param [ Array ] items The list of string to match against.
   def exclude_item(items)
     exclude = @excluded.to_set
-    Array(items).each { |i| exclude << i }
+    Array(items).each { |_item| exclude << _item }
     @excluded = exclude.to_a
   end
 
@@ -47,5 +67,23 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # @return [ Symbol ] The symbolized version of the transfer method.
   def method
     @method.to_sym
+  end
+
+  private
+
+  # Checks whether or not the file will be excluded.
+  #
+  # @return [ Boolean ] Whether or not to keep a given file.
+  def keep_file?(path)
+    @excluded.each { |_exclude| return false if path.match(/^#{_exclude}$/) }
+    return true
+  end
+
+  # The list of files that are not to be excluded in the given path list.
+  #
+  # @return [ Array ] The list of files that are not excluded.
+  def sanitized_directory(path)
+    sane_files = Dir.entries(path).select { |_file| keep_file?(_file) }
+    sane_files.map { |_file| File.expand_path("#{path}#{_file}") }
   end
 end
