@@ -50,4 +50,18 @@ class Backdat::Link
       Backdat::Config["#{self.name.downcase}_#{cfg.to_s}".to_sym]
     end
   end
+
+  # Checks whether the current link is a source node.
+  #
+  # @return [ Boolean ] Whether or not the current link is a source node.
+  def is_source?
+    @before.nil?
+  end
+
+  # Checks whether the current link is a target node.
+  #
+  # @return [ Boolean ] Whether or not the current link is a target node.
+  def is_target?
+    not is_source? and @next.nil?
+  end
 end
