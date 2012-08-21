@@ -11,7 +11,28 @@ class Backdat::Link
     @before = nil
     @next = nil
     @chain = nil
-    @format = :files
+    @format = :file
+  end
+
+  # Processes the current link.
+  def process
+    is_source? ? backup : restore
+  end
+
+  # Yields a Backdat::Data enumerator for the next link to consume/backup.
+  #
+  # @note The iterator typing is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def backup
+  end
+
+  # Yields a Backdat::Data enumerator for the prior link to consume/restore.
+  #
+  # @note The iterator handler is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def restore
   end
 
   # The name of the link type.
