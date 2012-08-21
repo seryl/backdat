@@ -2,6 +2,7 @@
 class Backdat::Chain < Backdat::Link
   attr_accessor :root, :tail
 
+  # Creates a new chain of events.
   def initialize
     @root = nil
     @tail = nil
@@ -11,6 +12,7 @@ class Backdat::Chain < Backdat::Link
   # 
   # @param [ Backdat::Link ] link The link to add onto the chain.
   def add(link)
+    link.chain = self
      @root = link if @root.nil?
      if @tail
       @tail.next = link
@@ -40,5 +42,18 @@ class Backdat::Chain < Backdat::Link
     return if _link.nil?
     _link.before.next = _link.next
     @tail = _link.before if @tail == link
+  end
+
+  # The number of links in the chain.
+  # 
+  # @return [ Fixnum ] The number of links in the chain.
+  def size
+    count = 0
+    _link = @root
+    until(_link == nil)
+      _link = _link.next
+      count += 1
+    end
+    count
   end
 end
