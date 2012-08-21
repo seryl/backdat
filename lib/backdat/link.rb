@@ -20,17 +20,17 @@ class Backdat::Link
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/backup.
-  #
+  # 
   # @note The iterator typing is based on the `@format` given.
-  #
+  # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def backup
   end
 
   # Yields a Backdat::Data enumerator for the prior link to consume/restore.
-  #
+  # 
   # @note The iterator handler is based on the `@format` given.
-  #
+  # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def restore
   end
@@ -52,14 +52,14 @@ class Backdat::Link
   end
 
   # Checks whether the current link is a source node.
-  #
+  # 
   # @return [ Boolean ] Whether or not the current link is a source node.
   def is_source?
     @before.nil?
   end
 
   # Checks whether the current link is a target node.
-  #
+  # 
   # @return [ Boolean ] Whether or not the current link is a target node.
   def is_target?
     not is_source? and @next.nil?
