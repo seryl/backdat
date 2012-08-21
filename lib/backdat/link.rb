@@ -1,17 +1,6 @@
 # A target, source, or intermediary in a backup or restore chain.
 class Backdat::Link
-
-  # The parameters passed to the link object.
-  attr_reader :params
-
-  # The prior link object in the chain.
-  attr_accessor :before
-
-  # The next link object in the chain.
-  attr_accessor :next
-
-  # The format the link object will export with.
-  attr_reader :format
+  attr_reader :params, :before, :next, :chain, :format
 
   # @param [ Hash ] params The parameters to initialize the link with.
   # 
@@ -20,7 +9,8 @@ class Backdat::Link
     @params = params
     @before = nil
     @next = nil
-    @format = :file
+    @chain = nil
+    @format = :files
   end
 
   # The name of the link type.

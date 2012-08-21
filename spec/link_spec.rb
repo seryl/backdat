@@ -25,8 +25,8 @@ describe "Backdat::Link" do
     Backdat::Config.configuration.delete(:link_blehk)
   end
 
-  it "should default to a `:file` format" do
-    @link.format.should eql(:file)
+  it "should default to the `:files` format" do
+    @link.format.should eql(:files)
   end
 
   it "should have nil as a default next" do

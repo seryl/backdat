@@ -47,4 +47,18 @@ describe "Backdat::Chain" do
     @chain.root.should eql(link1)
     @chain.tail.should eql(link2)
   end
+
+  it "should be able to return the size of the chain" do
+    link1 = Backdat::Link.new
+    link2 = Backdat::Link.new
+    link3 = Backdat::Link.new
+    @chain.add(link1)
+    @chain.add(link2)
+    @chain.add(link3)
+    @chain.size.should eql(3)
+  end
+
+  it "should have a size of zero when empty" do
+    @chain.size.should eql(0)
+  end
 end
