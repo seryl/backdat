@@ -32,6 +32,16 @@ describe "Backdat::Storage::Local" do
     Backdat::Config.configuration.delete(:local_path)
   end
 
+  it "should have a default transfer method of `:cp`" do
+    @storage = Backdat::Storage::Local.new
+    @storage.method.should eql(:cp)
+  end
+
+  it "should be able to override the transfer method to `:mv`" do
+    @storage = Backdat::Storage::Local.new(:method => "mv")
+    @storage.method.should eql(:mv)
+  end
+
   it "should be able to get a list of files in a directory" do
     FakeFS do
       FakeFS::FileSystem.clear

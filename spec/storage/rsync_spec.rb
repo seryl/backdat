@@ -32,6 +32,32 @@ describe "Backdat::Storage::Rsync" do
     Backdat::Config.configuration.delete(:rsync_path)
   end
 
+  it "should have a delete disabled by default" do
+    @storage = Backdat::Storage::Rsync.new
+    @storage.delete.should eql(false)
+  end
+
+  it "should be able to set the delete flag" do
+    @storage = Backdat::Storage::Rsync.new(:delete => true)
+    @storage.delete.should eql(true)
+  end
+
+  it "should be able to set the default delete flag from config" do
+    Backdat::Config[:rsync_delete] = true
+    @storage = Backdat::Storage::Rsync.new
+    @storage.delete.should eql(true)
+  end
+
+  it "should have a default transfer method of `:rsync`" do
+    @storage = Backdat::Storage::Rsync.new
+    @storage.method.should eql(:rsync)
+  end
+
+  it "should have a default transfer method of `:rsync`" do
+    @storage = Backdat::Storage::Rsync.new
+    @storage.method.should eql(:rsync)
+  end
+
   it "should be able to get a list of files in a directory" do
     FakeFS do
       FakeFS::FileSystem.clear

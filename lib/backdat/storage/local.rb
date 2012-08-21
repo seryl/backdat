@@ -10,12 +10,14 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # 
   # @option params [ String ] :path The path to the Local object.
   # @option params [ String ] :folder The optional folder to use.
+  # @option params [ String ] :method The method for target transfers.
   def initialize(params={})
     super
     @path = link_config :path
     @folder = link_config :folder
     @excluded = ['.', '..', '.backdat']
     exclude_item(link_config :exclude)
+    @method = link_config(:method) || :cp
   end
 
   # Returns the list of files at the given path.
@@ -38,5 +40,12 @@ class Backdat::Storage::Local < Backdat::Storage::Base
     exclude = @excluded.to_set
     Array(items).each { |i| exclude << i }
     @excluded = exclude.to_a
+  end
+
+  # The symbolized version of the transfer method.
+  # 
+  # @return [ Symbol ] The symbolized version of the transfer method.
+  def method
+    @method.to_sym
   end
 end
