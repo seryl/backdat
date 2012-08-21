@@ -26,5 +26,6 @@ group :development do
   gem "cucumber", ">= 0"
   gem "bundler", "~> 1.1.0"
   gem "jeweler", "~> 1.8.3"
+  gem "fakefs", "~> 0.4.0"
   gem (RUBY_VERSION =~ /^1\.9/ ? "simplecov" : "rcov"), ">= 0"
 end
