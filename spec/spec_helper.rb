@@ -28,5 +28,7 @@ require 'backdat'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
-  
+  if ENV['AWS_LIVE'].to_s != "true"
+    config.filter_run_excluding :live => true
+  end
 end
