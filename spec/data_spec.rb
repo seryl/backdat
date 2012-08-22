@@ -1,21 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Backdat::Data" do
-  before(:each) do
-    @data = Backdat::Data.new
+  it "should have a list of all of the current plugins" do
+    plugins = ["Base", "File", "Stream"]
+    Backdat::Data.plugins.should eql(plugins)
   end
-
-  after(:each) do
-    @data = nil
-  end
-
-  it "should have a default format of `:file`" do
-    @data.instance_variable_get(:@format).should eql(:file)
-  end
-
-  it "should have a default path of []" do
-    @data.instance_variable_get(:@path).should eql([])
-  end
-
-  it "should noop for the "
 end

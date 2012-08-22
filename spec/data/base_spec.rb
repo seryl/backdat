@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe "Backdat::Data::File" do
+describe "Backdat::Data::Base" do
   before(:each) do
-    @data = Backdat::Data::File.new
+    @data = Backdat::Data::Base.new
   end
 
   after(:each) do
@@ -13,13 +13,13 @@ describe "Backdat::Data::File" do
     @data.instance_variable_get(:@path).should eql([])
   end
 
-  it "should have a format type of `:file`" do
-    @data.format.should eql(:file)
+  it "should have a format type of `:base`" do
+    @data.format.should eql(:base)
   end
 
   it "should yield the next item for each request" do
     path = ["awesome", "cool", "blehk"]
-    @data = Backdat::Data::File.new(path)
+    @data = Backdat::Data::Base.new(path)
     @data.each_with_index { |item, index| path[index].should eql(item) }
   end
 end
