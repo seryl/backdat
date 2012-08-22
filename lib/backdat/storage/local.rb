@@ -9,7 +9,7 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # @param [ Hash ] params The parameters to initialize the Local object with.
   # 
   # @option params [ String ] :path The path to the Local object.
-  # @option params [ String ] :folder The optional folder to use.
+  # @option params [ String ] :folder The optional (remote) folder to use.
   # @option params [ String ] :method The method for target transfers.
   def initialize(params={})
     super
@@ -84,6 +84,6 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # @return [ Array ] The list of files that are not excluded.
   def sanitized_directory(path)
     sane_files = Dir.entries(path).select { |_file| keep_file?(_file) }
-    sane_files.map { |_file| File.expand_path("#{path}#{_file}") }
+    sane_files.map { |_file| File.expand_path(File.join(path, _file)) }
   end
 end
