@@ -15,6 +15,8 @@ class Backdat::Link
   end
 
   # Processes the current link.
+  # 
+  # @yield [ Backdat::Data ] A Backdat:Data enumerator.
   def process
     is_source? ? backup : restore
   end
