@@ -8,6 +8,16 @@ class Backdat::Chain < Backdat::Link
     @tail = nil
   end
 
+  # Starts the backup process for the chain.
+  def start_backup
+    @root.process
+  end
+
+  # Starts the restore process for the chain.
+  def start_restore
+    @tail.process
+  end
+
   # Adds a link onto the backdat chain.
   # 
   # @param [ Backdat::Link ] link The link to add onto the chain.
