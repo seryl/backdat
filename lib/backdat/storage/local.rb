@@ -21,17 +21,17 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/backup.
-  #
+  # 
   # @note The iterator typing is based on the `@format` given.
-  #
+  # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def backup
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/restore.
-  #
+  # 
   # @note The iterator typing is based on the `@format` given.
-  #
+  # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def restore
   end
@@ -72,7 +72,7 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   private
 
   # Checks whether or not the file will be excluded.
-  #
+  # 
   # @return [ Boolean ] Whether or not to keep a given file.
   def keep_file?(path)
     @excluded.each { |_exclude| return false if path.match(/^#{_exclude}$/) }
@@ -80,7 +80,7 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   end
 
   # The list of files that are not to be excluded in the given path list.
-  #
+  # 
   # @return [ Array ] The list of files that are not excluded.
   def sanitized_directory(path)
     sane_files = Dir.entries(path).select { |_file| keep_file?(_file) }
