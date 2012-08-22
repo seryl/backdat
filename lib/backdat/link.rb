@@ -17,11 +17,16 @@ class Backdat::Link
   # Processes the current link.
   # 
   # @param [ Backdat::Data ] data The Backdat::Data enumerator to process.
+  # @param [ Backdat::Data ] method The prior method in the process chain.
   # 
   # @yield [ Backdat::Data ] A Backdat:Data enumerator.
-  def process(data=nil)
+  def process(data=nil, method=nil)
     @data = data
-    is_source? ? backup : restore
+    if method
+      send(method)
+    else
+      is_source? ? backup : restore
+    end
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/backup.
@@ -30,7 +35,7 @@ class Backdat::Link
   # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def backup
-    @next.process(@data) if @next
+    @next.process(@data, :backup) if @next
   end
 
   # Yields a Backdat::Data enumerator for the prior link to consume/restore.
@@ -39,7 +44,7 @@ class Backdat::Link
   # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def restore
-    @before.process(@data) if @before
+    @before.process(@data, :restore) if @before
   end
 
   # The name of the link type.
