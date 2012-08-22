@@ -67,7 +67,7 @@ describe "Backdat::Storage::Rsync" do
       FileUtils.touch('blehk2')
 
       @storage = Backdat::Storage::Rsync.new(:path => '/')
-      @storage.file_list.should eql(['exampledir', 'blehk', 'blehk2'])
+      @storage.file_list.should eql(['/exampledir', '/blehk', '/blehk2'])
     end
   end
 
@@ -81,7 +81,7 @@ describe "Backdat::Storage::Rsync" do
 
       @storage = Backdat::Storage::Rsync.new(:path => '/')
       @storage.exclude_item('blehk')
-      @storage.file_list.should eql(['exampledir', 'blehk2'])
+      @storage.file_list.should eql(['/exampledir', '/blehk2'])
     end
   end
 
@@ -97,7 +97,7 @@ describe "Backdat::Storage::Rsync" do
 
       @storage = Backdat::Storage::Rsync.new(:path => '/')
       @storage.exclude_item("blehk[\\d]+")
-      @storage.file_list.should eql(['exampledir', 'blehk'])
+      @storage.file_list.should eql(['/exampledir', '/blehk'])
     end
   end
 end

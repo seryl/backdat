@@ -17,4 +17,20 @@ class Backdat::Storage::S3 < Backdat::Storage::Base
     @access_key = link_config :access_key
     @access_secret = link_config :access_secret
   end
+
+  # Yields a Backdat::Data enumerator for the next link to consume/backup.
+  #
+  # @note The iterator typing is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def backup
+  end
+
+  # Yields a Backdat::Data enumerator for the prior link to consume/restore.
+  #
+  # @note The iterator handler is based on the `@format` given.
+  #
+  # @yield [ Backdat::Data ] A Backdat::Data enumerator.
+  def restore
+  end
 end
