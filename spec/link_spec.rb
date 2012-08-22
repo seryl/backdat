@@ -49,4 +49,16 @@ describe "Backdat::Link" do
   it "should have nil as a default before" do
     @link.before.should eql(nil)
   end
+
+  it "should have nil as the default data enumerator" do
+    @link.instance_variable_get(:@data).should eql(nil)
+  end
+
+  it "should be able to safely run backup with a nil `@next`" do
+    lambda { @link.backup }.should_not raise_error
+  end
+
+  it "should be able to safely run restore with a nil `@before`" do
+    lambda { @link.restore }.should_not raise_error
+  end
 end

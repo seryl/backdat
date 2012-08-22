@@ -1,6 +1,6 @@
 # A target, source, or intermediary in a backup or restore chain.
 class Backdat::Link
-  attr_reader :params, :format
+  attr_reader :params
   attr_accessor :before, :next, :chain
 
   # @param [ Hash ] params The parameters to initialize the link with.
@@ -11,13 +11,16 @@ class Backdat::Link
     @before = nil
     @next = nil
     @chain = nil
-    @format = :file
+    @data = nil
   end
 
   # Processes the current link.
   # 
+  # @param [ Backdat::Data ] data The Backdat::Data enumerator to process.
+  # 
   # @yield [ Backdat::Data ] A Backdat:Data enumerator.
-  def process
+  def process(data=nil)
+    @data = data
     is_source? ? backup : restore
   end
 
@@ -27,6 +30,7 @@ class Backdat::Link
   # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def backup
+    @next.process(@data) if @next
   end
 
   # Yields a Backdat::Data enumerator for the prior link to consume/restore.
@@ -35,6 +39,7 @@ class Backdat::Link
   # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def restore
+    @before.process(@data) if @before
   end
 
   # The name of the link type.
@@ -42,6 +47,13 @@ class Backdat::Link
   # @return [ String ] The name of the link type.
   def name
     self.class.name.split('::').last
+  end
+
+  # The format of the data enumerator.
+  # 
+  # @return [ Symbol ] The format of the data parameter.
+  def format
+    @data.respond_to?(:format) ? @data.format : :file
   end
 
   # Uses the passed in parameter or defaults to the configuration.
