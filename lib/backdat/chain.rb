@@ -10,12 +10,12 @@ class Backdat::Chain < Backdat::Link
 
   # Starts the backup process for the chain.
   def backup
-    @root.backup
+    @tail.backup
   end
 
   # Starts the restore process for the chain.
   def restore
-    @tail.restore
+    @root.restore
   end
 
   # Adds a link onto the backdat chain.

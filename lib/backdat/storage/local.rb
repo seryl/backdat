@@ -15,10 +15,10 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   def initialize(params={})
     super
     @path = link_config :path
-    @folder = link_config :folder
     @excluded = ['.', '..', '.backdat']
     exclude_item(link_config :exclude)
     @method = link_config(:method) || :cp
+    @data = Backdat::Data::File.new(file_list)
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/backup.
@@ -27,6 +27,7 @@ class Backdat::Storage::Local < Backdat::Storage::Base
   # 
   # @yield [ Backdat::Data ] A Backdat::Data enumerator.
   def backup
+    
   end
 
   # Yields a Backdat::Data enumerator for the next link to consume/restore.

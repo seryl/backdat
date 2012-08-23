@@ -19,9 +19,12 @@ describe "Backdat::Link" do
   end
 
   it "should be able to check whether it is a target" do
+    chain = Backdat::Chain.new
     source = Backdat::Link.new
     source.next = @link
     @link.before = source
+    chain.add(source)
+    chain.add(@link)
     source.is_source?.should eql(true)
     @link.is_target?.should eql(true)
   end
@@ -50,8 +53,9 @@ describe "Backdat::Link" do
     @link.before.should eql(nil)
   end
 
-  it "should have nil as the default data enumerator" do
-    @link.instance_variable_get(:@data).should eql(nil)
+  it "should have `Backdat::Data::Base` as the default data enumerator" do
+    @link.instance_variable_get(:@data).format.should \
+        eql(Backdat::Data::Base.new.format)
   end
 
   it "should be able to safely run backup with a nil `@next`" do
