@@ -9,8 +9,8 @@ describe "Backdat::Data::Stream" do
     @data = nil
   end
 
-  it "should have a default path of []" do
-    @data.instance_variable_get(:@path).should eql([])
+  it "should have an empty path list" do
+    @data.path.should eql([])
   end
 
   it "should have a format type of `:stream`" do

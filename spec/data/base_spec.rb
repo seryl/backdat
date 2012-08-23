@@ -9,8 +9,8 @@ describe "Backdat::Data::Base" do
     @data = nil
   end
 
-  it "should have a default path of []" do
-    @data.instance_variable_get(:@path).should eql([])
+  it "should have an empty list of default items" do
+    @data.instance_variable_get(:@items).should eql([])
   end
 
   it "should have a format type of `:base`" do
