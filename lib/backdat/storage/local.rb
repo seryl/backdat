@@ -1,4 +1,5 @@
 require 'set'
+require 'fileutils'
 
 # The backdat Local storage object.
 class Backdat::Storage::Local < Backdat::Storage::Base
