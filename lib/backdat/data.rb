@@ -15,9 +15,9 @@ module Backdat::Data
 
     # Creates a new data enumerator.
     # 
-    # @param [ Array ] path The list of path items for the enumerator.
-    def initialize(path=[])
-      @path = path
+    # @param [ Array ] items The list of items for the enumerator.
+    def initialize(items=[])
+      @items = items
     end
 
     # The name of the data type.
@@ -31,7 +31,7 @@ module Backdat::Data
     # 
     # @yield [ Object ] The next file or chunk.
     def each
-      @path.each { |_path| yield _path }
+      @items.each { |_item| yield _item }
     end
   end
 end
