@@ -4,7 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem "yajl-ruby", "~> 1.1.0"
-gem "eventmachine", "~> 0.12.10"
+gem "eventmachine", ">= 1.0.0.beta4"
 gem "em-synchrony", "~> 0.2.0"
 gem "redis", "~> 3.0.1"
 

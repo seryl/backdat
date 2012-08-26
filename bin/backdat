@@ -1,7 +1,299 @@
-#!/usr/bin/env ruby
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+#!/usr/bin/env bash
 
-require 'backdat'
-require 'backdat/application/backdat-server'
+log()  { printf "%b\n" "$*" ; return $? ; }
+fail() { log "\nError: $*\n" ; exit 1 ; }
 
-Backdat::Application::Server.new.run
+PLATFORM=$(uname)
+
+usage()
+{
+  printf "%b" "Usage: backdat (options)
+
+  backdat SOURCE
+  backdat [ backup|restore ] SOURCE
+  backdat [ backup|restore ] SOURCE TARGET
+
+  ex: backdat my_directory my_prefix/my_tag
+
+"
+}
+
+create_config()
+{  
+  log 'Creating /etc/backdat.rb...'
+  echo """aws_access_key ''
+aws_access_secret ''
+    """ | sudo tee /etc/backdat.rb >/dev/null
+  if [[ $PLATFORM == 'Darwin' ]]; then
+    sudo chown $USER:staff /etc/backdat.rb
+  else
+    sudo chown $USER:$USER /etc/backdat.rb
+  fi
+}
+
+read_config()
+{
+  if [ ! -e /etc/backdat.rb ]; then
+    create_config
+  fi
+  access_key=$(
+    cat /etc/backdat.rb | grep aws_access_key    | awk '{print $2}' \
+    | sed 's/"//g' | sed "s/'//g")
+  access_secret=$(
+    cat /etc/backdat.rb | grep aws_access_secret | awk '{print $2}' \
+    | sed 's/"//g' | sed "s/'//g")
+
+  if [[ $access_key == '' ]] || [[ $access_secret == '' ]]; then
+    log 'AWS keys still need to be configured in /etc/backdat.rb'
+    exit 0
+  fi 
+}
+
+check_installed()
+{
+  app_installed=$(which $1) || $(cat /dev/null)
+}
+
+install_brew()
+{
+  check_installed "brew"
+  if [[ $PLATFORM == 'Darwin' ]] && [ -z $app_installed ]; then
+    log 'Downloading Homebrew...'
+    echo ''| /usr/bin/ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
+  fi
+}
+
+install_pip()
+{
+  check_installed "pip"
+  if [ -z $app_installed ]; then
+    log 'Installing pip...'
+    if [[ $PLATFORM == 'Darwin' ]]; then
+      easy_install distribute; easy_install pip
+    else
+      yum install -y python-pip
+    fi
+  fi
+}
+
+check_pip_package()
+{
+  pip_installed=$($pip_command freeze | grep $1 | awk 'BEGIN { FS="==" }; {print $1}')
+}
+
+install_pip_package()
+{
+  if [[ $PLATFORM == 'Darwin' ]]; then
+    pip_command='pip'
+  else
+    pip_command='pip-python'
+  fi
+  check_pip_package $1
+  if [ -z $pip_installed ]; then
+    log "Downloading $1..."
+    sudo $pip_command install $1
+  fi
+}
+
+check_gem_installed()
+{
+  gem_installed=$(gem list | grep $1 | awk '{ print $1 }' | head -n 1)
+}
+
+install_gem()
+{
+  check_gem_installed $1
+  if [ -z $gem_installed ]; then
+    log "Installing $1 gem..."
+    gem install $1
+  fi
+}
+
+install_duplicity()
+{
+  check_installed "duplicity"
+  if [ -z $app_installed ]; then
+    log "Installing duplicity..."
+    if [[ $PLATFORM == 'Darwin' ]]; then
+      brew update | grep -v 'stty: stdin' > /dev/null; brew install duplicity
+    else
+      sudo yum install -y duplicity
+    fi
+  fi
+}
+
+get_abs_path()
+{
+    local PARENT_DIR=$(dirname "$1")
+    cd "$PARENT_DIR"
+    abs_path="$(pwd)"/"$(basename $1)"
+    cd - >/dev/null
+}
+
+read_json_key()
+{
+  json_value=$(ruby -e """
+    require 'json'
+    data = JSON.parse(IO.read(\"$1\"))
+    Array(data[\"$2\"]).each { |value| puts value }
+  """)
+}
+
+create_dotbackdat()
+{
+  local base=$(basename $abs_path)
+  if [ -d $abs_path ]; then
+    log "Creating .backdat file..."
+  fi
+  if [ -z $tag ] && [ -z $dst ]; then
+    echo -n "Please enter the tag (default is $base): "
+    read tag_to_use
+    if [ -z $tag_to_use ]; then
+      tag_to_use=$base
+    fi
+  else
+    tag_to_use=$tag
+  fi
+
+  if [ -z $prefix ] && [ -z $dst ]; then
+    echo -n "Please enter the prefix (default is dev): "
+    read prefix_to_use
+    if [ -z $prefix_to_use ]; then
+      prefix_to_use='dev'
+    fi
+  else
+    prefix_to_use=$prefix
+  fi
+
+  if [ -d $abs_path ]; then
+    cat > $1 <<EOF
+{
+  "tag": "$tag_to_use",
+  "prefix": "$prefix_to_use",
+  "storage": "s3",
+  "exclude": []
+}
+EOF
+  fi
+}
+
+read_dotbackdat()
+{
+  get_abs_path $src
+  json_file="$abs_path/.backdat"
+
+  if [ ! -z $dst ]; then
+    tag_info=($(echo $dst | sed 's/\// /g'))
+    if [ -z ${tag_info[1]} ]; then
+      tag=${tag_info[0]}
+    else
+      prefix=${tag_info[0]}
+      tag=${tag_info[1]}
+    fi
+  fi
+
+  if [ ! -e $json_file ]; then
+    create_dotbackdat $json_file
+  else
+    read_json_key $json_file "tag"
+    tag=$json_value
+    if [ -z $tag ]; then
+      log "The tag needs to be configured in the $json_file"
+    fi
+
+    read_json_key $json_file "prefix"
+    prefix=$json_value
+    if [ -z $prefix ]; then
+      log "The prefix needs to be configured in the $json_file"
+    fi
+
+    read_json_key $json_file "storage"
+    storage=$json_value
+    if [ -z $storage ]; then
+      log "The storage needs to be configured in the $json_file"
+    fi
+
+    read_json_key $json_file "exclude"
+    exclude=($json_value)
+  fi
+}
+
+get_targets()
+{
+  src=$1; dst=$2
+}
+
+setup_backdat()
+{
+  install_brew
+  install_pip
+  install_duplicity
+  install_pip_package "boto"
+  install_gem "json"
+  read_config
+}
+
+generate_s3_url()
+{
+  if [ -z $prefix ]; then
+    s3url="s3+http://backdat/${tag}"
+  else
+    s3url="s3+http://backdat/${prefix}/${tag}"
+  fi
+}
+
+run_duplicity()
+{
+  export AWS_ACCESS_KEY_ID=$access_key
+  export AWS_SECRET_ACCESS_KEY=$access_secret
+  duplicity $@
+}
+
+backup()
+{
+  get_targets $1 $2
+  read_dotbackdat
+  generate_s3_url
+  run_duplicity --no-encryption --full-if-older-than 30D $src $s3url
+}
+
+restore()
+{
+  get_targets $1 $2
+  read_dotbackdat
+  generate_s3_url
+  run_duplicity --no-encryption $s3url $src
+  create_dotbackdat $json_file
+}
+
+setup_backdat
+
+# Parse CLI Arguments.
+while (( $# > 0 ))
+do
+  token="$1"
+
+  case "$token" in
+    (backup)
+      backup $2 $3
+      exit 0
+        ;;
+
+    (restore)
+      restore $2 $3
+      exit 0
+        ;;
+
+    (help|usage)
+      usage
+      exit 0
+        ;;
+
+    (*)
+      backup $1 $2
+      exit 0
+        ;;
+  esac
+done
+
+usage
