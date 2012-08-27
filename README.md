@@ -4,7 +4,7 @@ A better backup library and service. Shell Command.
 
 ## Installation
 
-bash < <( curl -sL https://raw.github.com/seryl/backdat/shell/scripts/install-backdat)
+    bash < <( curl -sL https://raw.github.com/seryl/backdat/shell/scripts/install-backdat)
 
 ## Usage
 
