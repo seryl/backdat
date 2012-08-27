@@ -1,32 +1,21 @@
-# backdat
+# backdat (shell)
 
-A better backup library and service.
+A better backup library and service. Shell Command.
 
-## Library
+## Installation
 
-The library consists of a number of backends very similar to the backup gem.
+bash < <( curl -sL https://raw.github.com/seryl/backdat/shell/scripts/install-backdat)
 
-## Service
+## Usage
 
-backdat manages backups for the current node and it's transports to the
-various storage backends.
+This branch holds a wrapper around duplicity to allow Amazon AWS S3 backups.
 
-## Orchestrator
+Using:
 
-Currently not implemented. Intended to acts as a proxy for multiple servers.
+    backdat SOURCE
+    backdat [ backup|restore] SOURCE
+    backdat [ backup|restore] SOURCE TARGET
 
-## Contributing to backdat
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-* Fork the project.
-* Start a feature/bugfix branch.
-* Commit and push until you are happy with your contribution.
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+    ex: backdat my_directory my_prefix/my_tag
 
-## Copyright
-
-Copyright (c) 2012 Josh Toft. See LICENSE.txt for
-further details.
-
+The application itself will handle all of the dependency installation, etc.
