@@ -5,5 +5,5 @@ fail() { log "\nError: $*\n" ; exit 1 ; }
 
 log 'Installing backdat...'
 sudo curl -sL https://raw.github.com/seryl/backdat/shell/bin/backdat > /usr/local/bin/backdat
-sudo chmod +x ./backdat
+sudo chmod +x /usr/local/bin/backdat
 log 'Backdat is installed; please configure your /etc/backdat.rb file.'
