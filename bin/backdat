@@ -262,7 +262,7 @@ restore()
   get_targets $1 $2
   read_dotbackdat
   generate_s3_url
-  run_duplicity --no-encryption $s3url $src
+  run_duplicity --no-encryption --force $s3url $src
   create_dotbackdat $json_file
 }
 
