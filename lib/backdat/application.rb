@@ -63,7 +63,7 @@ class Backdat::Application
       ( !Backdat::Config[:daemonize] )
       stdout_logger = Logger.new(STDOUT)
       STDOUT.sync = true
-      stdout_logger = Backdat::Log.logger.formatter
+      stdout_logger.formatter = Backdat::Log.logger.formatter
       Backdat::Log.loggers << stdout_logger
     end
     Backdat::Log.level = Backdat::Config[:log_level]
