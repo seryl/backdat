@@ -226,9 +226,9 @@ get_targets()
 setup_backdat()
 {
   install_brew
-  install_pip
-  install_duplicity
-  install_pip_package "boto"
+  # install_pip
+  # install_duplicity
+  # install_pip_package "boto"
   install_gem "json"
   read_config
 }
