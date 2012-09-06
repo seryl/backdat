@@ -262,6 +262,12 @@ backup()
 restore()
 {
   get_targets $1 $2
+  get_abs_path $src
+  json_file="$abs_path/.backdat"
+  if [ ! -f $json_file ]; then
+    log "There is no backdat file located at $abs_path, cannot restore."
+    exit 0
+  fi
   rsync -arv --delete home.nessops.net:/data/backdat/$dst/ $src
   #read_dotbackdat
   #generate_s3_url
