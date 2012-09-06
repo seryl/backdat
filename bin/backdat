@@ -254,7 +254,7 @@ backup()
   get_targets $1 $2
   read_dotbackdat
   generate_s3_url
-  run_duplicity --no-encryption --full-if-older-than 30D $src $s3url
+  run_duplicity --no-encryption --full-if-older-than $3 30D $src $s3url
 }
 
 restore()
@@ -262,7 +262,7 @@ restore()
   get_targets $1 $2
   read_dotbackdat
   generate_s3_url
-  run_duplicity --no-encryption --force $s3url $src
+  run_duplicity --no-encryption $3 $s3url $src
   create_dotbackdat $json_file
 }
 
@@ -275,12 +275,12 @@ do
 
   case "$token" in
     (backup)
-      backup $2 $3
+      backup $2 $3 $4
       exit 0
         ;;
 
     (restore)
-      restore $2 $3
+      restore $2 $3 $4
       exit 0
         ;;
 
@@ -290,7 +290,7 @@ do
         ;;
 
     (*)
-      backup $1 $2
+      backup $1 $2 $3
       exit 0
         ;;
   esac
